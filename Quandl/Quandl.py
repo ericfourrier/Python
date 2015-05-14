@@ -316,9 +316,9 @@ def _getauthtoken(token,text):
                 pass
 
             else:
-                print("Token {} activated and saved for later use.".format(token))
+                print("Token activated and saved for later use.")
         except Exception as e:
-            print("Error writing token to cache: {}".format(str(e)))
+            print("Error writing token to cache")
 
     elif not savedtoken and not token:
             if text == "no" or text == False:
@@ -331,7 +331,7 @@ def _getauthtoken(token,text):
         if text == "no" or text == False:
              pass
         else:
-            print("Using cached token {} for authentication.".format(token))
+            print("Using cached token for authentication.")
     return token
 
 
