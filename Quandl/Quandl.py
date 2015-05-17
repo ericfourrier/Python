@@ -13,6 +13,8 @@ import re
 from dateutil import parser
 from numpy import genfromtxt
 
+
+
 try:
     from urllib.error import HTTPError  # Python 3
     from urllib.parse import urlencode
@@ -274,29 +276,44 @@ def get_meta(dataset,authtoken=None,verbose =False,output = 'csv'):
     dataset :str or list, depending on single dataset usage or multiset usage
             Dataset codes are available on the Quandl website, return a list of
             dictionnaries if list
+    output : 'json' if you want a dictionnary or a list of dictionnary , 'csv' if 
+    you want a pandas Series or a DataFrame
     authtoken : your identification token
     verbose : print detailled info to sdout 
 
     Returns
     --------
-    a dictionnary if isinstance(dataset,str), a list of dictionnary if isinstance(dataset,list) 
+    if output = 'json' dictionnary if isinstance(dataset,str), 
+    a list of dictionnary if isinstance(dataset,list) 
+    if output = 'csv' Series if isinstance(dataset,str), a pandas DataFrame if isinstance(dataset,list) 
 
     """
     if not authtoken:
         authtoken = _getauthtoken(authtoken,verbose)
     if isinstance(dataset,str):
-        page = QUANDL_API_URL+ 'datasets/{0}.json?authtoken={1}&exclude_data=true'.format(dataset,authtoken)
+        page = QUANDL_API_URL+ 'datasets/{0}.json?auth_token={1}&exclude_data=true'.format(dataset,authtoken)
         request = Request(page)
         page = urlopen(request)
         json_page = json.loads(page.read())
-    if output == 'json'
-        return json_page
-    if output = 'csv':
-        return pd.Dataframe(json_page)
-    else :
-        raise ValueError("output should set as  'json' or 'csv'")
+        if output == "json":
+            return json_page
+        elif output == "csv":
+            return pd.Series(json_page) # return a Serie 
+        else :
+            raise ValueError("output should set as  'json' or 'csv'")
     if isinstance(dataset,list):
-        return [get_meta(df) for df in dataset]
+        list_json = [get_meta(df,output ='json') for df in dataset]
+        if output == "json":
+            return list_json
+        elif output == "csv":
+            return pd.DataFrame(list_json)
+        else :
+            raise ValueError("output should set as  'json' or 'csv'")
+
+
+
+
+
 
 # format date, if None returns None
 def _parse_dates(date):
