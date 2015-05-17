@@ -265,6 +265,38 @@ def search(query, source=None, page=1, authtoken=None, verbose=True, prints=None
             print('\n\n')
     return datalist
 
+def get_meta(dataset,authtoken=None,verbose =False,output = 'csv'):
+    """
+    Return the meta data of a dataset 
+
+    Parameters 
+    ----------
+    dataset :str or list, depending on single dataset usage or multiset usage
+            Dataset codes are available on the Quandl website, return a list of
+            dictionnaries if list
+    authtoken : your identification token
+    verbose : print detailled info to sdout 
+
+    Returns
+    --------
+    a dictionnary if isinstance(dataset,str), a list of dictionnary if isinstance(dataset,list) 
+
+    """
+    if not authtoken:
+        authtoken = _getauthtoken(authtoken,verbose)
+    if isinstance(dataset,str):
+        page = QUANDL_API_URL+ 'datasets/{0}.json?authtoken={1}&exclude_data=true'.format(dataset,authtoken)
+        request = Request(page)
+        page = urlopen(request)
+        json_page = json.loads(page.read())
+    if output == 'json'
+        return json_page
+    if output = 'csv':
+        return pd.Dataframe(json_page)
+    else :
+        raise ValueError("output should set as  'json' or 'csv'")
+    if isinstance(dataset,list):
+        return [get_meta(df) for df in dataset]
 
 # format date, if None returns None
 def _parse_dates(date):
