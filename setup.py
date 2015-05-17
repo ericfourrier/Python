@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from Quandl import __version__, __authors__, __maintainer__, __email__, __url__, __license__
 from Quandl import __name__ as package_name
 import os
@@ -35,4 +36,5 @@ setup(
       # install_requires = install_requires,
       dependency_links = dependency_links,
       packages = ['Quandl'],
+      zip_safe=False
 )
